@@ -18,17 +18,28 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: 乌鸦
+title: BLANK STACK
 email: wblanksky@hotmail.com
+author: wkyo
 description: >- # this means to ignore newlines until "baseurl:"
-  想太多
+  FOOLISH SEARCH
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  wkyo
 
 # Build settings
-theme: jekyll-theme-minima
-# plugins:
+# theme: minima
+# remote_theme: FromEndWorld/LOFFER
+plugins:
+  - jekyll-coffeescript
+  - jekyll-default-layout
+  - jekyll-gist
+  - jekyll-github-metadata
+  - jekyll-optional-front-matter
+  - jekyll-paginate
+  - jekyll-readme-index
+  - jekyll-titles-from-headings
+  - jekyll-relative-links
 #   - jekyll-feed
 
 # Exclude from processing.
@@ -50,3 +61,42 @@ theme: jekyll-theme-minima
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+
+permalink: /post/:title:output_ext
+paginate: 2
+paginate_path: "/posts/page:num"
+sass:
+  style: compact
+
+favicon:
+  site: /assets/images/sunrise-svgrepo-com.svg
+  github: /assets/images/github-svgrepo-com.svg
+
+rss:
+
+menu:
+  - name: 'home'
+    url: '/'
+  - name: 'archive'
+    url: '/archives'
+  - name: 'category'
+    url: '/categories'
+  - name: 'about'
+    url: '/about'
+
+  #about: /about/ || user
+  #tags: /tags/ || tags
+  #categories: /categories/ || th
+  # archives: /archives/ || archive
+  #schedule: /schedule/ || calendar
+  #sitemap: /sitemap.xml || sitemap
+  #commonweal: /404/ || heartbeat
+
+social:
+  github: https://github.com/wkyo
+
+latex: katex
+
+comment: disqus
+disqus:
+  token: "blog-x7jpjasku8"

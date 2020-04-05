@@ -1,0 +1,29 @@
+.post{
+    pre {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+        margin: 4rem 0 2rem 0;
+        border-left: 5px solid gray;
+        padding-left: 15px;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+
+    h3 {
+        font-size: 1.45rem;
+    }
+
+    h4, h5, h6 {
+        font-size: 1.2rem;
+    }
+
+    img {
+        max-width: 90%;
+        max-height: 500px;
+    }
+}

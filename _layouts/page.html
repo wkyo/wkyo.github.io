@@ -1,0 +1,14 @@
+---
+layout: default
+comments: false
+---
+<div>
+    <div class="jumbotron jumbotron-fluid py-4">
+        <div class="container">
+            <h1 class="text-center display-5 text-shadow">{{ page.title | default: '-' }}</h1>
+        </div>
+    </div>
+    <div class="container">
+        {{ content }}
+    </div>
+</div>

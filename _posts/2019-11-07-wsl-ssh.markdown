@@ -1,0 +1,85 @@
+---
+layout: post
+title: WSL共享Windows主机的SSH-AGENT服务
+categories: windows
+tags:
+  - WSL
+  - windows
+  - ssh-agent
+---
+
+Windows10自带了一个非常方便的ssh-agent服务，我们只需要在Windows的服务列表里面启用该服务就能在CMD或PowerShell里直接使用ssh-add添加密钥，实现ssh免密登录。但在Windows的Linux子系统下，默认没有ssh-agent服务启动，通过 <code>eval `ssh-agent`</code> 的方式，每次打开终端都需要重新添加ssh密钥（每次都会启动一个新的ssh-agent进程），比较麻烦。为了在WSL下也能正常访问Window的`ssh-agent`，可以通过`wsl-ssh-agent`工具创建指向Windows `ssh-agent`的socket文件，并修改WSL的环境变量SSH_AUTH_SOCK为该socket文件路径。
+
+# Windows 10 启动 ssh-agent
+
+## 命令行方式
+
+打开PowerShell，通过 `Set-Service -StartupType Automatic ssh-agent` 将 `ssh-agent` 服务的启动类型设为自启，随后键入 `Start-Service ssh-agent` 启动当前会话下的 `ssh-agent` 服务。
+
+```ps
+PS C:\windows\system32> Set-Service -StartupType Automatic ssh-agent
+PS C:\windows\system32> Start-Service ssh-agent
+PS C:\windows\system32> Get-Service ssh-agent
+
+Status   Name               DisplayName
+------   ----               -----------
+Running  ssh-agent          OpenSSH Authentication Agent
+
+
+PS C:\windows\system32> (Get-Service ssh-agent).startType
+Automatic
+```
+
+## 图形界面方式
+
+右键“我的电脑”（Windows 10上为“此电脑”），选择“管理”菜单项，打开计算机管理窗口。
+
+1. 左栏选择服务；
+2. 右栏中找到OpenSSH Authentication Agent服务；
+3. 双击打开设置界面，将启动类型由禁用改为自动；
+4. 点击应用，这时才可以手动启动和停止agent服务；
+5. 点击启动按钮，启动agent服务。
+
+![windows ssh-agent](/assets/posts/2019-11-07-wsl-ssh/windows-ssh-agent-autostart-ui.png)
+
+
+# wsl-ssh-agent 快速配置
+
+> `wsl-ssh-agent`是一个简单的托盘通知小程序，其为WSL提供了一个用于连接Windows ssh-agent服务的socket接口，来自该socket的所有请求都将被代理到Windows ssh-agent中。WSL只需要正确地设置这个套接字的地址（即，维护环境变量 `SSH_AGENT_SOCK`），就可以通过这个接口Windows主机共享ssh-agent服务。除此之外，wsl-ssh-agent还对Windows和远程Linux主机的剪贴板同步提供了一定的支持，通过win32yank实现本地Windows剪贴板访问控制，通过lemonade实现远程剪贴板数据同步，通过添加适当的参数wsl-ssh-agent可以作为lemonade的服务器。
+> 
+> @NOTE:
+> 
+> 1. wsl-ssh-agent需要unix socket特性支持；
+> 2. 从Insider Build 17063开始，Windows 10开始支持通过unix socket（AF_UNIX）地址簇在win32进程间通信；
+> 3. 之前的版本可能需要使用[ssh-agent-wsl](https://github.com/rupor-github/ssh-agent-wsl)。
+
+## 启动 wsl-ssh-agent 服务
+
+从 https://github.com/rupor-github/wsl-ssh-agent 的 releases 页面获取 `wsl-ssh-agent.7z`（当前版本为v1.3），并解压到 `C:\APP\wsl-ssh-agent\wsl-ssh-agent-gui.exe `。
+
+![wsl-ssh-agent icon](/assets/posts/2019-11-07-wsl-ssh/wsl-ssh-agent-icon.png)
+
+在`PowerShell`下启动 `wsl-ssh-agent`，这个服务会在后台常驻，并在通知栏显示一个图标。
+
+```ps
+C:\APP\wsl-ssh-agent\wsl-ssh-agent-gui.exe -setenv -envname=WSL_AUTH_SOCK
+```
+
+该命令将会在`%USERPROFILE%/AppData/Local/Temp/`下自动创建一个形如`ssh-213734371.sock`的socket文件，并将该文件的路径存放在环境变量WSL_AUTH_SOCK中（wsl-ssh-agent-gui在退出时会自动进行清理工作，删除环境变量和socket文件），同时将该变量共享给WSL。
+
+> Windows 10 在 17063 之后为了在Windows和WSL之间共享环境变量，引入了WSLENV变量，这个变量在两端都存在。通过这个变量可以实现将WSL环境变量共享给Windows或将Windows环境变量共享给WSL。
+> 
+> 更多关于WSL变量共享的信息，请参考： https://devblogs.microsoft.com/commandline/share-environment-vars-between-WSL-and-windows/
+
+每次使用WSL下的ssh时，需要确保 Windows 的 `ssh-agent` 和 `wsl-ssh-agent` 均以启动。
+
+## 配置 WSL
+
+在WSL下修改环境变量SSH_AUTH_SOCK的值为wsl-ssh-agent-gui设置的环境变量WSL_AUTH_SOCK的值（设置了这个值后，ssh将会通过提供的socket接口进行认证）。WSL每次启动后都需要手动设置这个值，比较繁琐，可以在~/.bashrc文件的结尾添加一行代码，自动设置环境变量。
+
+```sh
+[ -n ${WSL_AUTH_SOCK} ] && export SSH_AUTH_SOCK=${WSL_AUTH_SOCK}
+```
+
+通过上述方法，我们已经可以在WSL中正常访问ssh-agent。但有一个问题，在设置wsl-ssh-agent-gui后，当前cmd或powershell中直接进入WSL后，无法获取到环境变量WSL_AUTH_SOCK，需要重新打开一个窗口进入WSL。
+

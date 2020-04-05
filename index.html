@@ -1,0 +1,71 @@
+---
+# Feel free to add content and custom Front Matter to this file.
+# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
+
+layout: home
+---
+
+
+<div>
+    {% for post in paginator.posts %}
+    <article class="post-thumbnail border-bottom mb-2">
+        <h2><a href="{{ post.url | relative_url }}" class="text-reset">{{ post.title }}</a></h2>
+        <div class="mb-1">
+            <time class="mr-2" datetime="{{ post.date | date: '%Y-%m-%d' }}">
+                <i class="fa fa-clock-o"></i>
+                {{ post.date | date: '%Y-%m-%d' }}
+            </time>
+            {% for tag in post.categories %}
+            <span class="mr-2"><i class="fa fa-folder-open-o"></i> {{ tag }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ post.excerpt }}
+        </div>
+    </article>
+    {% endfor %}
+    {% if paginator.total_pages > 1 %}
+    <div class="my-4">
+        <ul class="pagination">
+            {% if paginator.previous_page %}
+            <li class="page-item">
+                <a class="page-link" href="{{ paginator.previous_page_path }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% assign page_total = paginator.total_pages %}
+            {% for page_idx in (1..page_total) %}
+            {% if paginator.page != page_idx %}
+            <li class="page-item">
+                {% if page_idx > 1 %}
+                <a class="page-link" href="{{ '/posts/page' | append: page_idx | url_relative }}">
+                    {{ page_idx }}
+                </a>
+                {% else %}
+                <a class="page-link" href="{{ '/' | url_relative }}">
+                    {{ page_idx }}
+                </a>
+                {% endif %}
+            </li>
+            {% else %}
+            <li class="page-item active">
+                <span class="page-link">
+                    {{ page_idx }}
+                </span>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if paginator.next_page %}
+            <li class="page-item">
+                <a class="page-link" href="{{ paginator.next_page_path }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+</div>

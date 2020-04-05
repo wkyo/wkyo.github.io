@@ -1,0 +1,50 @@
+{% if site.latex == 'katex' %}
+
+<script src="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.js"></script>
+<script src="https://cdn.bootcss.com/KaTeX/0.11.1/contrib/auto-render.min.js"></script>
+
+<script>
+    $("script[type='math/tex']").replaceWith(function () {
+        var tex = $(this).text();
+        return katex.renderToString(tex, {
+            displayMode: false
+        });
+    });
+
+    $("script[type='math/tex; mode=display']").replaceWith(function () {
+        var tex = $(this).html();
+        return katex.renderToString(tex.replace(/%.*/g, ''), {
+            displayMode: true
+        });
+    });
+
+    document.querySelectorAll('.post').forEach(el => {
+        renderMathInElement(el, {
+            delimiters: [{
+                    left: "$",
+                    right: "$",
+                    display: false
+                }, {
+                    left: "$$",
+                    right: "$$",
+                    display: true
+                },
+                {
+                    left: "\\(",
+                    right: "\\)",
+                    display: false
+                },
+                {
+                    left: "\\[",
+                    right: "\\]",
+                    display: true
+                }
+            ]
+        })
+    })
+    renderMathInElement
+</script>
+
+<link href=" https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet">
+
+{% endif %}

@@ -1,0 +1,43 @@
+---
+layout: default
+comments: true
+---
+<div>
+    <div class="jumbotron jumbotron-fluid py-4">
+        <div class="container">
+            <h1 class="text-center display-5 text-shadow">{{ page.title | default: '-' }}</h1>
+            <div class="text-center">
+                <div>
+                    <time class="mx-1" datetime="{{ page.date | date: '%Y-%m-%d' }}">
+                        <i class="fa fa-clock-o"></i>
+                        {{ page.date | date: '%Y-%m-%d'  }}
+                    </time>
+                    <span class="mx-1">
+                        <i class="fa fa-edit"></i>
+                        {{ page.author | default: site.author }}
+                    </span>
+                    {% for tag in page.categories %}
+                    <span class="mx-1" class="mr-2">
+                        <i class="fa fa-folder-open-o"></i>
+                        {{ tag }}
+                    </span>
+                    {% endfor %}
+                </div>
+                <div>
+                    {% if page.tags %}
+                    <small><em>{{ page.tags | join: "</em> - <em>" }}</em></small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <article class="post post-full">
+            {{ content }}
+        </article>
+        {% include disqus_comments.liquid %}
+    </div>
+</div>
+
+
+{% include katex.liquid %}
