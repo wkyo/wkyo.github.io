@@ -202,7 +202,7 @@ class Pagination(object):
         ...
     ...
 ```
-
+{% raw  %}
 ```html
 {# Display a page of todos #}
 <ul>
@@ -230,6 +230,7 @@ class Pagination(object):
 
 {{ render_navigation(paginated_todos, 'view_todos') }}
 ```
+{% endraw %}
 
 # 额外的拓展
 
