@@ -169,6 +169,68 @@ class User(db.Document):
         return 'User(email="{}", username="{}")'.format(self.username, self.password)
 ```
 
+## Flask-MongoEngine QeurySet 扩展
+
+Flask-MongoEngine 对 MongoEngine的查询`QuerySet`进行了拓展，以支持`get_or_404`，`first_or_404`，`paginate`，`paginate_field`。
+
+- `get_or_404` 与`QuerySet.get`类似，如果不存在或有两个及以上的匹配项，则会抛出404异常
+- `first_or_404` 与`QuerySet.first`类似，如果不存在，则会抛出404异常
+- `paginate` 对QuerySet结果进行分页，接受两个参数：`page`和`per_page`，返回一个Pagination对象。
+- `paginate_field(field_name, doc_id, page, per_page, total=None)` 与`paginate`类似，对文档的数组类型字段进行分页。这个方法会首先尝试获取“字段名+count”形式的值，如`posts_count`，作为posts的总数，如果不存在则会获取整个文档，然后计算数组类型字段的长度。**不建议使用！**
+
+```py
+paged = User.objects.paginate(page=1, per_page=10)
+```
+
+`Pagination`支持的属性包括：
+
+- `total` 文档总数
+- `pages` 总页数
+- `page` 当前页数
+- `has_prev` 是否有前一页
+- `has_next` 是否有后一页
+- `pre_num` 上一页页码
+- `next_num` 下一页页码
+- `items` 可迭代文档集合
+
+此外，`Pagination`还支持一个`iter_pages`方法，用于为分页器生成编号，被跳过的页码使用`None`表示。
+
+```py
+class Pagination(object):
+    ...
+    def iter_pages(self, left_edge=2, left_current=2, right_current=5, right_edge=2):
+        ...
+    ...
+```
+
+```jinja
+{# Display a page of todos #}
+<ul>
+    {% for todo in paginated_todos.items %}
+        <li>{{ todo.title }}</li>
+    {% endfor %}
+</ul>
+
+{# Macro for creating navigation links #}
+{% macro render_navigation(pagination, endpoint) %}
+  <div class=pagination>
+  {% for page in pagination.iter_pages() %}
+    {% if page %}
+      {% if page != pagination.page %}
+        <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+      {% else %}
+        <strong>{{ page }}</strong>
+      {% endif %}
+    {% else %}
+      <span class=ellipsis>…</span>
+    {% endif %}
+  {% endfor %}
+  </div>
+{% endmacro %}
+
+{{ render_navigation(paginated_todos, 'view_todos') }}
+```
+
 # 额外的拓展
 
 ## 为Flask-MongoEngine添加额外的JSON序列化类型支持
@@ -193,7 +255,7 @@ def override_json_encoder(app: Flask):
                 return o.isoformat()
             return superclass.default(self, o)
 
-    app.json = _JsonEncoder
+    app.json_encoder = _JsonEncoder
 
 
 def create_app()
@@ -226,7 +288,29 @@ def create_app()
 
 ## 编辑器/pylint提示“Instance of 'MongoEngine' has no 'StringField' member”
 
-Flask-MongoEngine在初始化时，为MongoEngine类通过`setattr`方法动态注入`mongoengine`和`mongoengine.fields`的所有属性，但pylint在进行静态检测时，无法找到动态注入的属性。
+Flask-MongoEngine在初始化时，为MongoEngine类通过`_include_mongoengine`方法动态注入`mongoengine`和`mongoengine.fields`的所有属性，但pylint在进行静态检测时，无法处理动态注入的属性。
+
+```py
+def _include_mongoengine(obj):
+    """
+    Copy all of the attributes from mongoengine and mongoengine.fields
+    onto obj (which should be an instance of the MongoEngine class).
+    """
+    for module in (mongoengine, mongoengine.fields):
+        for attr_name in module.__all__:
+            if not hasattr(obj, attr_name):
+                setattr(obj, attr_name, getattr(module, attr_name))
+
+                # patch BaseField if available
+                _patch_base_field(obj, attr_name)
+
+class MongoEngine(object):
+    """Main class used for initialization of Flask-MongoEngine."""
+
+    def __init__(self, app=None, config=None):
+        _include_mongoengine(self)
+        ...
+```
 
 解决方法1：直接通过`mongoengine.fields.XXXField`引用。
 ```py
