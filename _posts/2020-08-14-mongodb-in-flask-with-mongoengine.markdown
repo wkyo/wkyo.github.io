@@ -203,7 +203,7 @@ class Pagination(object):
     ...
 ```
 
-```jinja
+```html
 {# Display a page of todos #}
 <ul>
     {% for todo in paginated_todos.items %}
