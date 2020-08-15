@@ -63,7 +63,7 @@ plugins:
 #   - vendor/ruby/
 
 permalink: /post/:title:output_ext
-paginate: 2
+paginate: 10
 paginate_path: "/posts/page:num"
 sass:
   style: compact
