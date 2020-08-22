@@ -1,0 +1,8 @@
+<script>
+let scriptElement = document.createElement('script');
+scriptElement.type = "text/javascript"; 
+scriptElement.src = "{{ '/assets/js/markdown-toc.js' | relative_url }}";
+
+let headElement = document.querySelector('head');
+headElement.appendChild(scriptElement)
+</script>

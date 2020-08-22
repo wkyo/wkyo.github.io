@@ -35,6 +35,7 @@ comments: true
         <article class="post post-full">
             {{ content }}
         </article>
+        {% include post_toc_generator.liquid %}
         {% include disqus_comments.liquid %}
     </div>
 </div>
