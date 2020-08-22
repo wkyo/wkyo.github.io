@@ -100,3 +100,8 @@ latex: katex
 comment: disqus
 disqus:
   token: "blog-x7jpjasku8"
+gittalk:
+  clientID: "3bedc7be2c95db90fec4"
+  clientSecret: "cdf9dab72cab705e90c3d2593bb7dd9e5fd02f72"
+  repo: wkyo.github.io
+  owner: wkyo

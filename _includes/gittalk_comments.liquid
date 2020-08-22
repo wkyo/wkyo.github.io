@@ -4,11 +4,11 @@
 
 <script>
     const gitalk = new Gitalk({
-        clientID: '3bedc7be2c95db90fec4',
-        clientSecret: 'cdf9dab72cab705e90c3d2593bb7dd9e5fd02f72',
-        repo: 'wko/wkyo.github.io', // The repository of store comments,
-        owner: 'wkyo',
-        admin: ['wkyo'],
+        clientID: '{{ site.gittalk.clientID }}',
+        clientSecret: '{{ site.gittalk.clientSecret }}',
+        repo: '{{ site.gittalk.repo }}', // The repository of store comments,
+        owner: '{{ site.gittalk.owner }}',
+        admin: ['{{ site.gittalk.owner }}'],
         id: location.pathname, // Ensure uniqueness and length less than 50
         distractionFreeMode: false // Facebook-like distraction free mode
     })
