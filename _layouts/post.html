@@ -35,8 +35,14 @@ comments: true
         <article class="post post-full">
             {{ content }}
         </article>
+
         {% include post_toc_generator.liquid %}
+
+        {% if site.comment == "disqus" %}
+        {% include disqus_comments.liquid %}
+        {% elsif site.comment == "gittalk" %}
         {% include gittalk_comments.liquid %}
+        {% endif %}
     </div>
 </div>
 
