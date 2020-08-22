@@ -62,7 +62,7 @@ plugins:
 #   - vendor/gems/
 #   - vendor/ruby/
 
-permalink: /post/:title:output_ext
+permalink: /post/:title
 paginate: 10
 paginate_path: "/posts/page:num"
 sass:
