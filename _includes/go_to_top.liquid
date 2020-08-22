@@ -1,0 +1,25 @@
+<div id="go-to-top-control" style="position: fixed; display: none; right: 15px; bottom: 15px;">
+    <button type="button" class="btn btn-primary" onclick="go_to_top();">
+        <i class="fa fa-chevron-up"></i>
+        回到顶部
+    </button>
+
+    <script>
+        function go_to_top() {
+            $('html').animate({
+                scrollTop: 0
+            }, 1000);
+            // document.documentElement.scrollTop = 0;
+        }
+
+        let goToTopElement = document.querySelector('#go-to-top-control');
+
+        window.addEventListener('scroll', _.debounce(function (e) {
+            if (window.scrollY > window.screen.availHeight * 0.6) {
+                goToTopElement.style.display = 'inline-block';
+            } else {
+                goToTopElement.style.display = 'none';
+            }
+        }, 500))
+    </script>
+</div>
