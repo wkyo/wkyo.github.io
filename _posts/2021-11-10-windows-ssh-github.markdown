@@ -81,3 +81,7 @@ $ git pull
 Enter passphrase for key 'C:\Users\wkyo\.ssh\uniauth':
 Already up to date.
 ```
+
+# 参考
+
+1. [Set up SSH public key authentication to connect to a remote system](https://kb.iu.edu/d/aews)
