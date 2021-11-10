@@ -97,7 +97,7 @@ social:
 
 latex: katex
 
-comment: gittalk
+comment: disqus
 disqus:
   token: "blog-x7jpjasku8"
 gittalk:
