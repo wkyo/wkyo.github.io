@@ -58,13 +58,13 @@ and the repository exists.
 
 在 `~/.ssh/` 目录下新建一个 `config` 文件，添加如下内容。
 
-```ssh_config
+```
 Host github.com
 IdentityFile C:\Users\wkyo\.ssh\uniauth
 ```
 
 也可以通过这种方式为不同的主机设置不同的访问密钥。
-```ssh_config
+```
 Host host2.somewhere.edu
 IdentityFile ~/.ssh/old_keys/host2_key
 
