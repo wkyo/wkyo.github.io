@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Windows下SSH免密钥访问/Git访问Github
+excerpt_separator: <!--more-->
 categories: windows
 tags:
   - windows
