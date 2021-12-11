@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Debian 10 下 man 异常退出“exited with status 159”，提示“bad system call”
-categories: Linux
+categories: linux
 tags:
   - linux
 ---
