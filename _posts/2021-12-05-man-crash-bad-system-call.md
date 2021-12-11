@@ -1,17 +1,25 @@
 ---
 layout: post
-title: Debian 7 下 man 异常退出“exited with status 159”，提示“bad system call”
-excerpt_separator: <!--more-->
+title: Debian 10 下 man 异常退出“exited with status 159”，提示“bad system call”
 categories: Linux
 tags:
   - linux
 ---
+
+Debian 10 下 `man` （man 2.8.5） 命令异常退出（status 159），提示 `preconv: Bad system call`。
 
 # 环境
 
 ```sh
 $ uname -a
 Linux VM-4-12-debian 4.19.0-11-amd64 #1 SMP Debian 4.19.146-1 (2020-09-17) x86_64 GNU/Linux
+
+$ lsb_release -a
+Distributor ID: Debian
+Description:    Debian GNU/Linux 10 (buster)
+Release:        10
+Codename:       buster
+
 $ man --version
 man 2.8.5
 ```
@@ -26,8 +34,6 @@ man: nroff: Bad system call
 
 man: command exited with status 159: (cd /usr/share/man && /usr/lib/man-db/zsoelim) | (cd /usr/share/man && /usr/lib/man-db/manconv -f UTF-8:ISO-8859-1 -t UTF-8//IGNORE) | (cd /usr/share/man && preconv -e UTF-8) | (cd /usr/share/man && tbl) | (cd /usr/share/man && nroff -mandoc -rLL=143n -rLT=143n -Tutf8)
 ```
-
-<!--more-->
 
 # 解决方法
 
