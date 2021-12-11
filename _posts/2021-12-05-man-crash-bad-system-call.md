@@ -55,6 +55,6 @@ $ export MAN_DISABLE_SECCOMP=1
 
 - FS#57557 - `[man-db]` man: tbl: Bad system call (core dumped) https://bugs.archlinux.org/task/57557
 - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=889608
-- https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=889608
+- https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=890861
 - linux man手册返回错误 man: command exited with status 159 https://blog.csdn.net/weilin731/article/details/120646356
 - Man doesn't work on Ubuntu 18.04 https://askubuntu.com/questions/1228660/man-doesnt-work-on-ubuntu-18-04
