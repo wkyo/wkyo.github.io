@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Docker容器访问主机网络——Gitea访问主机MySQL数据库
-subject
 categories: linux
 tags:
   - docker
